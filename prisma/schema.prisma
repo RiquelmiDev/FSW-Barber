@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,19 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Criar tabela de usuários
 model User {
-  id        String    @id @default(cuid())
-  email     String
-  name      String
-  bookings  Booking[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  bookings      Booking[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
-// Criar tabela de Barbearias
-model BarberShop {
-  id          String              @id @default(cuid())
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Barbershop {
+  id          String              @id @default(uuid())
   name        String
   address     String
   phones      String[]
@@ -28,34 +68,26 @@ model BarberShop {
   imageUrl    String
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
-  // Define uma relação de "um para muitos" entre o modelo atual e o modelo BarberShopService
-  services    BarberShopService[]
+  services    BarbershopService[]
 }
 
-// Criar tabela de serviços
-model BarberShopService {
-  id           String     @id @default(cuid())
+model BarbershopService {
+  id           String     @id @default(uuid())
   name         String
   description  String
   imageUrl     String
   price        Decimal    @db.Decimal(10, 2)
-  barberShopId String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  // Relacionamento com a tabela de barbearias
-  barberShop   BarberShop @relation(fields: [barberShopId], references: [id])
-  // Relacionamento com a tabela de agendamentos
+  barbershopId String
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
   bookings     Booking[]
 }
 
 model Booking {
-  id        String            @id @default(cuid())
+  id        String            @id @default(uuid())
   userId    String
-  // Relacionamento com a tabela de usuários
   user      User              @relation(fields: [userId], references: [id])
   serviceId String
-  // Relacionamento com a tabela de serviços de barbearia
-  service   BarberShopService @relation(fields: [serviceId], references: [id])
+  service   BarbershopService @relation(fields: [serviceId], references: [id])
   date      DateTime
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
