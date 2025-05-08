@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Criar tabela de usuários
+model User {
+  id        String    @id @default(cuid())
+  email     String
+  name      String
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Criar tabela de Barbearias
+model BarberShop {
+  id          String              @id @default(cuid())
+  name        String
+  address     String
+  phones      String[]
+  description String
+  imageUrl    String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  // Define uma relação de "um para muitos" entre o modelo atual e o modelo BarberShopService
+  services    BarberShopService[]
+}
+
+// Criar tabela de serviços
+model BarberShopService {
+  id           String     @id @default(cuid())
+  name         String
+  description  String
+  imageUrl     String
+  price        Decimal    @db.Decimal(10, 2)
+  barberShopId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  // Relacionamento com a tabela de barbearias
+  barberShop   BarberShop @relation(fields: [barberShopId], references: [id])
+  // Relacionamento com a tabela de agendamentos
+  bookings     Booking[]
+}
+
+model Booking {
+  id        String            @id @default(cuid())
+  userId    String
+  // Relacionamento com a tabela de usuários
+  user      User              @relation(fields: [userId], references: [id])
+  serviceId String
+  // Relacionamento com a tabela de serviços de barbearia
+  service   BarberShopService @relation(fields: [serviceId], references: [id])
+  date      DateTime
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
