@@ -4,7 +4,6 @@ import BarbershopItem from "./_components/barbershop-item"
 import BookingItem from "./_components/booking-item"
 import Header from "./_components/header"
 import { Button } from "./_components/ui/button"
-import { Card, CardContent } from "./_components/ui/card"
 import { Input } from "./_components/ui/input"
 import { quickSearchOptions } from "./_constants/search"
 import { db } from "./_lib/prisma"
@@ -86,15 +85,7 @@ export default async function Home() {
       </div>
 
       {/* Footer */}
-      <footer>
-        <Card>
-          <CardContent className="px-5 py-6">
-            <p className="text-sm text-gray-400">
-              © 2023 Copyright <span className="font-bold">FSW Barber</span>
-            </p>
-          </CardContent>
-        </Card>
-      </footer>
+
       {/* Fim do Footer */}
     </div>
   )
