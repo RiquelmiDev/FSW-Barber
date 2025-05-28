@@ -6,6 +6,7 @@ import Search from "./_components/search"
 import { Button } from "./_components/ui/button"
 import { quickSearchOptions } from "./_constants/search"
 import { db } from "./_lib/prisma"
+import Link from "next/link"
 
 // Sever
 export default async function Home() {
@@ -33,14 +34,21 @@ export default async function Home() {
         {/* Busca Rapida */}
         <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
-            <Button key={option.title} className="gap-2" variant="secondary">
-              <Image
-                src={option.imageUrl}
-                width={16}
-                height={16}
-                alt={option.title}
-              />
-              {option.title}
+            <Button
+              key={option.title}
+              className="gap-2"
+              variant="secondary"
+              asChild
+            >
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl}
+                  width={16}
+                  height={16}
+                  alt={option.title}
+                />
+                {option.title}
+              </Link>
             </Button>
           ))}
         </div>
