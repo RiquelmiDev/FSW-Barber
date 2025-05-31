@@ -15,6 +15,16 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  callbacks: {
+    // Callback para incluir o ID do usuário no token JWT
+    async session({ session, user }) {
+      session.user = {
+        ...session.user,
+        id: user.id, // Adiciona o ID do usuário à sessão
+      } as typeof session.user & { id: string } //as any
+      return session
+    },
+  },
 })
 
 // Exporta o handler para os métodos GET e POST da rota de autenticação
