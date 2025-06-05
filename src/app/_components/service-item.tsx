@@ -70,13 +70,6 @@ const getTimeList = (bookings: Booking[]) => {
   })
 }
 
-interface SessionUser {
-  id: string
-  name?: string | null
-  email?: string | null
-  image?: string | null
-}
-
 const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const [sigInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
@@ -143,7 +136,6 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
       //Chama a funcao responsavel por criar a reserva
       await createBooking({
         serviceId: service.id,
-        userId: (data?.user as SessionUser).id,
         date: newDate,
       })
       handleBookingSheetOpenChange() // Fecha a sheet e reseta os estados
