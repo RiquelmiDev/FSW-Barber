@@ -26,4 +26,5 @@ export const createBooking = async (params: CreateBookingParams) => {
     },
   })
   revalidatePath("/barbershops/[id]") // Revalida a rota para atualizar os dados
+  revalidatePath("/bookings")
 }

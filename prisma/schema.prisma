@@ -81,7 +81,7 @@ model BarbershopService {
   barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
   bookings     Booking[]
 }
-
+//TODO: adicionar o status do agendamento
 model Booking {
   id        String            @id @default(uuid())
   userId    String
