@@ -75,7 +75,7 @@ const BookingItem = ({ booking }: BookingItemsProps) => {
       open={isSheetDeleteBookingOpen}
       onOpenChange={handleDeleteSheetOpenChange}
     >
-      <SheetTrigger asChild>
+      <SheetTrigger className="w-full min-w-[90%]">
         <Card className="min-w-[90%] cursor-pointer">
           <CardContent className="flex justify-between p-0">
             {/* Esquerda */}
